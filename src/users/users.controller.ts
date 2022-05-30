@@ -36,6 +36,7 @@ export class UsersController {
     return user;
   }
 
+  @Serialize(UserDto)
   @Get()
   findAllUser(@Query('email') email: string) {
     return this.UsersService.find(email);
@@ -46,6 +47,7 @@ export class UsersController {
     return this.UsersService.remove(id);
   }
 
+  @Serialize(UserDto)
   @Patch('/:id')
   updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
     return this.UsersService.update(id, body);
