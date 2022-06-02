@@ -9,6 +9,7 @@ import {
   Post,
   Query,
   Session,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/createUser.dto';
 import { UpdateUserDto } from './dtos/updateUser.dto';
@@ -18,15 +19,17 @@ import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
 import { CurrentUser } from './decorators/currentUser.decorator';
 import { User } from './user.entity';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('auth')
+@Serialize(UserDto)
 export class UsersController {
   constructor(
     private UsersService: UsersService,
     private AuthService: AuthService,
   ) {}
 
-  @Serialize(UserDto)
+  @UseGuards(AuthGuard)
   @Get('/whoami')
   async whoami(@CurrentUser() user: User) {
     return user;
@@ -40,7 +43,6 @@ export class UsersController {
     return user;
   }
 
-  @Serialize(UserDto)
   @Post('/signin')
   async signIn(@Body() body: CreateUserDto, @Session() session: any) {
     const user = await this.AuthService.signIn(body.email, body.password);
@@ -55,7 +57,6 @@ export class UsersController {
     return true;
   }
 
-  @Serialize(UserDto)
   @Get('/:id')
   async findUser(@Param('id') id: string) {
     const user = await this.UsersService.findOne(id);
@@ -67,7 +68,6 @@ export class UsersController {
     return user;
   }
 
-  @Serialize(UserDto)
   @Get()
   findAllUser(@Query('email') email: string) {
     return this.UsersService.find(email);
@@ -78,7 +78,6 @@ export class UsersController {
     return this.UsersService.remove(id);
   }
 
-  @Serialize(UserDto)
   @Patch('/:id')
   updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
     return this.UsersService.update(id, body);
