@@ -40,4 +40,10 @@ export class ReportsController {
   getEstimate(@Query() query: getEstimateDto) {
     return this.reportService.createEstimate(query);
   }
+
+  @Get('/:id')
+  @Serialize(ReportDto)
+  getReport(@Param('id') id: string) {
+    return this.reportService.getReport(id);
+  }
 }

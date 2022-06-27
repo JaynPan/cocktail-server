@@ -50,4 +50,17 @@ export class ReportsService {
       .limit(3)
       .getRawOne();
   }
+
+  async getReport(reportId: string) {
+    const report = await this.repo.findOne({
+      where: { id: reportId },
+      relations: ['user'],
+    });
+
+    if (!report) {
+      throw new NotFoundException('report not found');
+    }
+
+    return report;
+  }
 }
