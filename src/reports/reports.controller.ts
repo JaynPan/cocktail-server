@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { CreateReportDto } from './dtos/createReport.dto';
 import { ReportsService } from './reports.service';
-import { AuthGuard } from '../guards/auth.guard';
+import { JwtAuthGuard } from '../guards/auth.guard';
 import { CurrentUser } from '../users/decorators/currentUser.decorator';
 import { User } from '../users/models/user.entity';
 import { Serialize } from '../interceptors/serialize.interceptor';
@@ -24,7 +24,7 @@ export class ReportsController {
   constructor(private reportService: ReportsService) {}
 
   @Post()
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Serialize(ReportDto)
   createReport(@Body() body: CreateReportDto, @CurrentUser() user: User) {
     return this.reportService.create(body, user);

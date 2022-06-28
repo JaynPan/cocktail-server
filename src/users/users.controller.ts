@@ -8,7 +8,6 @@ import {
   Patch,
   Post,
   Query,
-  Session,
   UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/createUser.dto';
@@ -19,7 +18,7 @@ import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
 import { CurrentUser } from './decorators/currentUser.decorator';
 import { User } from './models/user.entity';
-import { AuthGuard } from '../guards/auth.guard';
+import { JwtAuthGuard } from '../guards/auth.guard';
 
 @Controller('auth')
 @Serialize(UserDto)
@@ -29,31 +28,27 @@ export class UsersController {
     private AuthService: AuthService,
   ) {}
 
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('/whoami')
   async whoami(@CurrentUser() user: User) {
     return user;
   }
 
   @Post('/signup')
-  async createUser(@Body() body: CreateUserDto, @Session() session: any) {
+  async createUser(@Body() body: CreateUserDto) {
     const user = await this.AuthService.signup(body.email, body.password);
-
-    session.userId = user.id;
     return user;
   }
 
   @Post('/signin')
-  async signIn(@Body() body: CreateUserDto, @Session() session: any) {
+  async signIn(@Body() body: CreateUserDto) {
     const user = await this.AuthService.signIn(body.email, body.password);
-
-    session.userId = user.id;
     return user;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('/signout')
-  async signOut(@Session() session: any) {
-    session.userId = null;
+  async signOut() {
     return true;
   }
 

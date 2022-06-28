@@ -3,13 +3,17 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
 import { UsersService } from './users.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
   async signup(email: string, password: string) {
     const users = await this.userService.find(email);
@@ -25,6 +29,7 @@ export class AuthService {
   }
 
   async signIn(email: string, password: string) {
+    console.log('sign in service');
     const [user] = await this.userService.find(email);
 
     if (!user) {
@@ -37,6 +42,7 @@ export class AuthService {
       throw new BadRequestException('bad password');
     }
 
-    return user;
+    const accessToken = await this.jwtService.signAsync({ user });
+    return { ...user, accessToken };
   }
 }
