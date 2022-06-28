@@ -12,7 +12,7 @@ import { CreateReportDto } from './dtos/createReport.dto';
 import { ReportsService } from './reports.service';
 import { AuthGuard } from '../guards/auth.guard';
 import { CurrentUser } from '../users/decorators/currentUser.decorator';
-import { User } from '../users/user.entity';
+import { User } from '../users/models/user.entity';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { ReportDto } from './dtos/report.dto';
 import { ApproveReportDto } from './dtos/approveReport.dto';

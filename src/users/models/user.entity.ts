@@ -7,21 +7,22 @@ import {
   Entity,
   OneToMany,
 } from 'typeorm';
-import { Report } from '../reports/report.entity';
+import { Report } from '../../reports/report.entity';
+import { Role } from './role.enum';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
   password: string;
 
-  @Column({ default: true })
-  admin: boolean;
+  @Column({ type: 'enum', enum: Role, default: Role.USER })
+  role: Role;
 
   @OneToMany(() => Report, (report) => report.user)
   reports: Report[];

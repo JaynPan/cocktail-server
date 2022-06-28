@@ -1,5 +1,11 @@
-import { Column, PrimaryGeneratedColumn, Entity, ManyToOne } from 'typeorm';
-import { User } from '../users/user.entity';
+import {
+  Column,
+  PrimaryGeneratedColumn,
+  Entity,
+  ManyToOne,
+  CreateDateColumn,
+} from 'typeorm';
+import { User } from '../users/models/user.entity';
 
 @Entity()
 export class Report {
@@ -32,4 +38,7 @@ export class Report {
 
   @Column()
   mileage: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }
