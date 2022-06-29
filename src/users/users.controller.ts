@@ -7,7 +7,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
   UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/createUser.dto';
@@ -18,7 +17,10 @@ import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
 import { CurrentUser } from './decorators/currentUser.decorator';
 import { User } from './models/user.entity';
-import { JwtAuthGuard } from '../guards/auth.guard';
+import { JwtAuthGuard } from './guards/auth.guard';
+import { Roles } from './decorators/roles.decorator';
+import { Role } from './models/role.enum';
+import { RolesGuard } from './guards/role.guard';
 
 @Controller('auth')
 @Serialize(UserDto)
@@ -30,8 +32,8 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/whoami')
-  async whoami(@CurrentUser() user: User) {
-    return user;
+  async whoami(@CurrentUser() currentUser: User) {
+    return currentUser;
   }
 
   @Post('/signup')
@@ -52,6 +54,8 @@ export class UsersController {
     return true;
   }
 
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/:id')
   async findUser(@Param('id') id: string) {
     const user = await this.UsersService.findOne(id);
@@ -61,11 +65,6 @@ export class UsersController {
     }
 
     return user;
-  }
-
-  @Get()
-  findAllUser(@Query('email') email: string) {
-    return this.UsersService.find(email);
   }
 
   @Delete('/:id')

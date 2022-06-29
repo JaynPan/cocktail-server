@@ -29,7 +29,6 @@ export class AuthService {
   }
 
   async signIn(email: string, password: string) {
-    console.log('sign in service');
     const [user] = await this.userService.find(email);
 
     if (!user) {

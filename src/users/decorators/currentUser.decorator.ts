@@ -9,6 +9,6 @@ export const CurrentUser = createParamDecorator(
   // context is a wrapper for the incoming request, not only for HTTP  but also socket, grpc, graphQL and so on
   (data: never, context: ExecutionContext) => {
     const request = context.switchToHttp().getRequest();
-    return request.currentUser;
+    return request.user;
   },
 );

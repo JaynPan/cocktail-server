@@ -7,8 +7,9 @@ import { User } from './models/user.entity';
 import { UsersService } from './users.service';
 import { AuthService } from './auth.service';
 import { CurrentUserMiddleware } from '../middleware/currentUser.middleware';
-import { JwtStrategy } from '../guards/jwt.strategy';
-import { JwtAuthGuard } from '../guards/auth.guard';
+import { JwtStrategy } from './guards/jwt.strategy';
+import { JwtAuthGuard } from './guards/auth.guard';
+import { RolesGuard } from './guards/role.guard';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { JwtAuthGuard } from '../guards/auth.guard';
     TypeOrmModule.forFeature([User]),
   ],
   controllers: [UsersController],
-  providers: [UsersService, AuthService, JwtStrategy, JwtAuthGuard],
+  providers: [UsersService, AuthService, JwtStrategy, JwtAuthGuard, RolesGuard],
 })
 export class UsersModule {
   configure(consumer: MiddlewareConsumer) {

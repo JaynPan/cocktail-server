@@ -1,5 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  SetMetadata,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+
 import { User } from '../users/models/user.entity';
 import { Repository } from 'typeorm';
 import { CreateReportDto } from './dtos/createReport.dto';
@@ -15,6 +21,24 @@ export class ReportsService {
 
     report.user = user;
     return this.repo.save(report);
+  }
+
+  async delete(reportId: string, userId: string) {
+    const report = await this.repo.findOne({
+      where: { id: reportId },
+      relations: ['user'],
+    });
+
+    if (!report) {
+      throw new NotFoundException('report not found');
+    }
+
+    if (report.user.id !== userId) {
+      throw new UnauthorizedException('unauthorized');
+    }
+
+    this.repo.remove(report);
+    return report;
   }
 
   async changeApproval(reportId: string, approved: boolean) {
