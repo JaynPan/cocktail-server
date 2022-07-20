@@ -10,6 +10,8 @@ import { CurrentUserMiddleware } from '../middleware/currentUser.middleware';
 import { JwtStrategy } from './guards/jwt.strategy';
 import { JwtAuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/role.guard';
+import { AppleSignUpGuard } from './guards/appleSignUp.guard';
+import { AppleStrategy } from './strategies/apple.strategy';
 
 @Module({
   imports: [
@@ -22,7 +24,15 @@ import { RolesGuard } from './guards/role.guard';
     TypeOrmModule.forFeature([User]),
   ],
   controllers: [UsersController],
-  providers: [UsersService, AuthService, JwtStrategy, JwtAuthGuard, RolesGuard],
+  providers: [
+    UsersService,
+    AuthService,
+    JwtStrategy,
+    JwtAuthGuard,
+    RolesGuard,
+    AppleSignUpGuard,
+    AppleStrategy,
+  ],
 })
 export class UsersModule {
   configure(consumer: MiddlewareConsumer) {

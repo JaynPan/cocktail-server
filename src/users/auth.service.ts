@@ -28,6 +28,18 @@ export class AuthService {
     return user;
   }
 
+  async appleSignup(email: string) {
+    const users = await this.userService.find(email);
+
+    if (users.length) {
+      throw new BadRequestException('email in use');
+    }
+
+    const user = await this.userService.createOAuthUser(email);
+    const accessToken = await this.jwtService.signAsync({ user });
+    return { ...user, accessToken };
+  }
+
   async signIn(email: string, password: string) {
     const [user] = await this.userService.find(email);
 

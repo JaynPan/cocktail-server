@@ -37,6 +37,8 @@
     "class-validator": "^0.13.2",
     "cookie-session": "^2.0.0",
     "cross-env": "^7.0.3",
+    "jwks-rsa": "^2.1.4",
+    "jwt-decode": "^3.1.2",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "pg": "^8.7.3",

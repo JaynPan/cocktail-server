@@ -21,6 +21,7 @@ import { JwtAuthGuard } from './guards/auth.guard';
 import { Roles } from './decorators/roles.decorator';
 import { Role } from './models/role.enum';
 import { RolesGuard } from './guards/role.guard';
+import { AppleSignUpGuard } from './guards/appleSignUp.guard';
 
 @Controller('auth')
 @Serialize(UserDto)
@@ -39,6 +40,13 @@ export class UsersController {
   @Post('/signup')
   async createUser(@Body() body: CreateUserDto) {
     const user = await this.AuthService.signup(body.email, body.password);
+    return user;
+  }
+
+  @UseGuards(AppleSignUpGuard)
+  @Post('/signup/apple')
+  public async signupApple(@Body() appleDto: any) {
+    const user = await this.AuthService.appleSignup(appleDto.email);
     return user;
   }
 
