@@ -7,10 +7,10 @@ import { User } from './models/user.entity';
 import { UsersService } from './users.service';
 import { AuthService } from './auth.service';
 import { CurrentUserMiddleware } from '../middleware/currentUser.middleware';
-import { JwtStrategy } from './guards/jwt.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtAuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/role.guard';
-import { AppleSignUpGuard } from './guards/appleSignUp.guard';
+import { AppleOAuthGuard } from './guards/appleOAuth.guard';
 import { AppleStrategy } from './strategies/apple.strategy';
 
 @Module({
@@ -30,7 +30,7 @@ import { AppleStrategy } from './strategies/apple.strategy';
     JwtStrategy,
     JwtAuthGuard,
     RolesGuard,
-    AppleSignUpGuard,
+    AppleOAuthGuard,
     AppleStrategy,
   ],
 })

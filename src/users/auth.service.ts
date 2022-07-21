@@ -40,7 +40,20 @@ export class AuthService {
     return { ...user, accessToken };
   }
 
-  async signIn(email: string, password: string) {
+  async appleLogin(email: string) {
+    let [user] = await this.userService.find(email);
+
+    if (!user) {
+      // In apple OAuth process, the email and name only populate once
+      // there is a chance that the details info isn't shown but user is actually first time login.
+      user = await this.userService.createOAuthUser(email);
+    }
+
+    const accessToken = await this.jwtService.signAsync({ user });
+    return { ...user, accessToken };
+  }
+
+  async login(email: string, password: string) {
     const [user] = await this.userService.find(email);
 
     if (!user) {

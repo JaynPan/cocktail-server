@@ -64,22 +64,20 @@ export class AppleStrategy {
     }
 
     try {
-      const res: JwtTokenSchema = <JwtTokenSchema>jwt.verify(token, signingKey);
+      const decodedToken: JwtTokenSchema = <JwtTokenSchema>(
+        jwt.verify(token, signingKey)
+      );
 
-      this.ValidateToken(res);
-      console.log(res);
-      return res;
+      if (decodedToken.iss !== 'https://appleid.apple.com') {
+        throw { message: 'Issuers do not match!' };
+      }
+      if (decodedToken.aud !== this.audience) {
+        throw { message: 'Audiences do not match!' };
+      }
+
+      return decodedToken;
     } catch (error) {
       throw error;
-    }
-  }
-
-  private ValidateToken(token: JwtTokenSchema): void {
-    if (token.iss !== 'https://appleid.apple.com') {
-      throw { message: 'Issuers do not match!' };
-    }
-    if (token.aud !== this.audience) {
-      throw { message: 'Audiences do not match!' };
     }
   }
 }

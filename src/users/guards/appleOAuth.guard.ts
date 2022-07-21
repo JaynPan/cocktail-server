@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { AppleStrategy, JwtTokenSchema } from '../strategies/apple.strategy';
 
 @Injectable()
-export class AppleSignUpGuard implements CanActivate {
+export class AppleOAuthGuard implements CanActivate {
   private readonly isInProd: boolean;
 
   constructor(
@@ -20,16 +20,20 @@ export class AppleSignUpGuard implements CanActivate {
 
     if (!token) return false;
 
-    const jwtSchema: JwtTokenSchema = await this.apple.ValidateTokenAndDecode(
-      token,
-    );
+    try {
+      const jwtSchema: JwtTokenSchema = await this.apple.ValidateTokenAndDecode(
+        token,
+      );
 
-    request.body = {
-      ...request.body,
-      email: request.body.email,
-      name: request.body.name,
-    };
+      request.body = {
+        ...request.body,
+        email: jwtSchema.email,
+        name: request.body.name,
+      };
 
-    return true;
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 }

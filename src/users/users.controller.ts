@@ -21,7 +21,8 @@ import { JwtAuthGuard } from './guards/auth.guard';
 import { Roles } from './decorators/roles.decorator';
 import { Role } from './models/role.enum';
 import { RolesGuard } from './guards/role.guard';
-import { AppleSignUpGuard } from './guards/appleSignUp.guard';
+import { AppleOAuthGuard } from './guards/appleOAuth.guard';
+import { AppleOAuthDto } from './dtos/appleOAuth.dto';
 
 @Controller('auth')
 @Serialize(UserDto)
@@ -43,23 +44,21 @@ export class UsersController {
     return user;
   }
 
-  @UseGuards(AppleSignUpGuard)
+  @UseGuards(AppleOAuthGuard)
   @Post('/signup/apple')
-  public async signupApple(@Body() appleDto: any) {
-    const user = await this.AuthService.appleSignup(appleDto.email);
-    return user;
+  public async signupApple(@Body() appleDto: AppleOAuthDto) {
+    return await this.AuthService.appleSignup(appleDto.email);
   }
 
-  @Post('/signin')
-  async signIn(@Body() body: CreateUserDto) {
-    const user = await this.AuthService.signIn(body.email, body.password);
-    return user;
+  @UseGuards(AppleOAuthGuard)
+  @Post('/login/apple')
+  public async loginApple(@Body() appleDto: AppleOAuthDto) {
+    return await this.AuthService.appleLogin(appleDto.email);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('/signout')
-  async signOut() {
-    return true;
+  @Post('/login')
+  async login(@Body() body: CreateUserDto) {
+    return await this.AuthService.login(body.email, body.password);
   }
 
   @Roles(Role.ADMIN)
