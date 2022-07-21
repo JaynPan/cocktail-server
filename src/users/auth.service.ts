@@ -6,6 +6,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { AppleOAuthDto } from './dtos/appleOAuth.dto';
+import { GoogleOAuthDto } from './dtos/googleOAuth.dto';
 
 import { UsersService } from './users.service';
 
@@ -49,6 +50,18 @@ export class AuthService {
     if (!user) {
       // In apple OAuth process, the email and name only populate once
       // there is a chance that the details info isn't shown but user is actually first time login.
+      user = await this.userService.createOAuthUser(email, name);
+    }
+
+    const accessToken = await this.jwtService.signAsync({ user });
+    return { ...user, accessToken };
+  }
+
+  async googleLogin(googleDto: GoogleOAuthDto) {
+    const { email, name } = googleDto;
+    let [user] = await this.userService.find(email);
+
+    if (!user) {
       user = await this.userService.createOAuthUser(email, name);
     }
 

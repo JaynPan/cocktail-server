@@ -23,6 +23,8 @@ import { Role } from './models/role.enum';
 import { RolesGuard } from './guards/role.guard';
 import { AppleOAuthGuard } from './guards/appleOAuth.guard';
 import { AppleOAuthDto } from './dtos/appleOAuth.dto';
+import { GoogleOAuthGuard } from './guards/googleOAuth.guard';
+import { GoogleOAuthDto } from './dtos/googleOAuth.dto';
 
 @Controller('auth')
 @Serialize(UserDto)
@@ -46,14 +48,20 @@ export class UsersController {
 
   @UseGuards(AppleOAuthGuard)
   @Post('/signup/apple')
-  public async signupApple(@Body() appleDto: AppleOAuthDto) {
+  async signupApple(@Body() appleDto: AppleOAuthDto) {
     return await this.AuthService.appleSignup(appleDto);
   }
 
   @UseGuards(AppleOAuthGuard)
   @Post('/login/apple')
-  public async loginApple(@Body() appleDto: AppleOAuthDto) {
+  async loginApple(@Body() appleDto: AppleOAuthDto) {
     return await this.AuthService.appleLogin(appleDto);
+  }
+
+  @UseGuards(GoogleOAuthGuard)
+  @Post('/login/google')
+  async loginGoogle(@Body() googleDto: GoogleOAuthDto) {
+    return await this.AuthService.googleLogin(googleDto);
   }
 
   @Post('/login')

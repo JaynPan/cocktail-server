@@ -12,6 +12,7 @@ import { JwtAuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/role.guard';
 import { AppleOAuthGuard } from './guards/appleOAuth.guard';
 import { AppleStrategy } from './strategies/apple.strategy';
+import { GoogleOAuthGuard } from './guards/googleOAuth.guard';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AppleStrategy } from './strategies/apple.strategy';
     RolesGuard,
     AppleOAuthGuard,
     AppleStrategy,
+    GoogleOAuthGuard,
   ],
 })
 export class UsersModule {
