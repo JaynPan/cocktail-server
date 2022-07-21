@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { AppleOAuthDto } from './dtos/appleOAuth.dto';
 
 import { UsersService } from './users.service';
 
@@ -28,25 +29,27 @@ export class AuthService {
     return user;
   }
 
-  async appleSignup(email: string) {
+  async appleSignup(appleDto: AppleOAuthDto) {
+    const { email, name } = appleDto;
     const users = await this.userService.find(email);
 
     if (users.length) {
       throw new BadRequestException('email in use');
     }
 
-    const user = await this.userService.createOAuthUser(email);
+    const user = await this.userService.createOAuthUser(email, name);
     const accessToken = await this.jwtService.signAsync({ user });
     return { ...user, accessToken };
   }
 
-  async appleLogin(email: string) {
+  async appleLogin(appleDto: AppleOAuthDto) {
+    const { email, name } = appleDto;
     let [user] = await this.userService.find(email);
 
     if (!user) {
       // In apple OAuth process, the email and name only populate once
       // there is a chance that the details info isn't shown but user is actually first time login.
-      user = await this.userService.createOAuthUser(email);
+      user = await this.userService.createOAuthUser(email, name);
     }
 
     const accessToken = await this.jwtService.signAsync({ user });

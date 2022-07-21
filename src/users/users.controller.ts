@@ -47,13 +47,13 @@ export class UsersController {
   @UseGuards(AppleOAuthGuard)
   @Post('/signup/apple')
   public async signupApple(@Body() appleDto: AppleOAuthDto) {
-    return await this.AuthService.appleSignup(appleDto.email);
+    return await this.AuthService.appleSignup(appleDto);
   }
 
   @UseGuards(AppleOAuthGuard)
   @Post('/login/apple')
   public async loginApple(@Body() appleDto: AppleOAuthDto) {
-    return await this.AuthService.appleLogin(appleDto.email);
+    return await this.AuthService.appleLogin(appleDto);
   }
 
   @Post('/login')

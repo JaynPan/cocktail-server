@@ -25,11 +25,8 @@ export class AppleOAuthGuard implements CanActivate {
         token,
       );
 
-      request.body = {
-        ...request.body,
-        email: jwtSchema.email,
-        name: request.body.name,
-      };
+      request.body.email = jwtSchema.email;
+      request.body.name = request.body.name || 'unknown';
 
       return true;
     } catch (err) {
